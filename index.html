@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lucky Baby · 潜能与副业作战台 v2</title>
+<style>
+:root{
+  --bg:#faf9f7; --card:#ffffff; --ink:#1f2328; --sub:#6b7280;
+  --line:#e5e3de; --accent:#b45309; --accent2:#0f766e; --danger:#b91c1c;
+  --star:#b45309; --mute:#9ca3af;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  line-height:1.7; font-size:15px; padding:0 0 60px;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+
+/* 头部 */
+header{background:var(--card);border-bottom:1px solid var(--line);padding:32px 0 24px;margin-bottom:24px}
+h1{font-size:26px;font-weight:700;letter-spacing:.5px}
+.sub{margin-top:6px;color:var(--sub);font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{background:#f5f3ef;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12.5px;color:#4b5563}
+.chip b{color:var(--accent);font-weight:600}
+
+/* 负荷警报 */
+.alert{background:#fff8f1;border:1px solid #f0c9a0;border-left:4px solid var(--accent);
+  border-radius:10px;padding:14px 18px;margin-bottom:22px;font-size:14px}
+.alert h4{font-size:14px;color:var(--accent);margin-bottom:6px}
+
+/* 结论摘要卡 */
+.summary{background:var(--card);border:2px solid var(--accent);border-radius:14px;
+  padding:22px 24px;margin-bottom:26px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.summary .tag{display:inline-block;background:var(--accent);color:#fff;font-size:12px;
+  padding:3px 10px;border-radius:6px;letter-spacing:1px;margin-bottom:12px}
+.lever{font-size:20px;font-weight:700;line-height:1.5;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.metric{background:#faf8f5;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.metric .k{font-size:12px;color:var(--sub);letter-spacing:.5px}
+.metric .v{font-size:15px;font-weight:600;margin-top:3px;color:var(--ink)}
+.metric .n{font-size:12px;color:var(--mute);margin-top:2px}
+
+/* Tab */
+nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:10px}
+nav a{text-decoration:none;color:var(--sub);background:#f2efea;border:1px solid var(--line);
+  border-radius:8px;padding:8px 14px;font-size:13.5px;transition:.15s}
+nav a:hover{background:#eae6df;color:var(--ink)}
+nav a.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+section{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:24px 26px;margin-bottom:22px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+section.on{display:block}
+h2{font-size:19px;font-weight:700;margin-bottom:6px}
+h2 span{color:var(--accent);margin-right:8px}
+.lead{color:var(--sub);font-size:13.5px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--line)}
+
+/* 通用卡片 */
+h3{font-size:15.5px;font-weight:650;margin:18px 0 8px}
+p{margin-bottom:8px}
+ul{margin:6px 0 10px 20px}
+li{margin-bottom:5px}
+.skill{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px;background:#fdfcfa}
+.skill .name{font-size:16px;font-weight:700;color:var(--accent2)}
+.skill .row{display:flex;gap:10px;margin-top:8px;font-size:14px}
+.skill .row .lab{flex:0 0 92px;color:var(--sub);font-size:13px;padding-top:1px}
+.skill .row .txt{flex:1}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0 6px}
+th{background:#f4f1ec;text-align:left;padding:9px 10px;font-weight:600;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:hover td{background:#fdfbf8}
+.tight td,.tight th{padding:7px 8px;font-size:13px}
+
+/* 评分条 */
+.bar{height:6px;background:#eee;border-radius:4px;margin-top:5px;overflow:hidden;min-width:70px}
+.bar i{display:block;height:100%;border-radius:4px}
+.score{font-weight:700;font-size:14px}
+.badge{display:inline-block;font-size:11.5px;padding:2px 7px;border-radius:5px;white-space:nowrap}
+.b-star{background:var(--star);color:#fff}
+.b-ok{background:#dddbd5;color:#4b5563}
+.b-no{background:#f0efed;color:var(--mute);text-decoration:line-through}
+
+/* 红线卡 */
+.redline{background:#fff5f5;border:1px solid #f4cfcf;border-left:4px solid var(--danger);
+  border-radius:10px;padding:13px 16px;margin-top:18px;font-size:13.5px}
+.redline b{color:var(--danger)}
+.tip{background:#f2f8f7;border:1px solid #cfe6e2;border-left:4px solid var(--accent2);
+  border-radius:10px;padding:13px 16px;margin-top:14px;font-size:13.5px}
+.tip b{color:var(--accent2)}
+
+/* 产品线层级 */
+.layer{border:1px solid var(--line);border-radius:12px;padding:15px 18px;margin-bottom:12px;position:relative}
+.layer .lv{font-size:12px;color:#fff;background:var(--accent2);padding:2px 9px;border-radius:5px;display:inline-block}
+.layer .price{float:right;font-weight:700;color:var(--accent);font-size:15px}
+.layer h4{font-size:15.5px;margin:8px 0 6px;font-weight:650}
+.l4{background:#fbf7f2}.l3{background:#faf8f5}.l2{background:#f9fbfb}.l1{background:#fbfbf8}
+.arrow{text-align:center;color:var(--accent);font-size:18px;margin:2px 0;line-height:1}
+
+/* 时间轴 week */
+.phase{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px}
+.phase h4{font-size:16px;font-weight:700;margin-bottom:4px}
+.phase .goal{color:var(--accent2);font-size:13.5px;font-weight:600;margin-bottom:10px}
+.step{display:flex;gap:10px;margin-bottom:7px;font-size:13.5px}
+.step .no{flex:0 0 22px;height:22px;line-height:22px;text-align:center;background:#efece6;
+  border-radius:6px;font-size:12px;font-weight:600;color:#4b5563}
+.step .tx{flex:1}
+.hrs{display:inline-block;background:#efece6;color:#4b5563;font-size:11.5px;
+  padding:1px 6px;border-radius:4px;margin-left:4px}
+
+/* 占位符 */
+.ph{border:1px dashed #c8c3ba;background:#fbfaf7;color:var(--mute);
+  border-radius:8px;padding:7px 11px;font-size:12.5px;margin:8px 0;display:inline-block}
+
+footer{color:var(--mute);font-size:12.5px;text-align:center;margin-top:30px;line-height:1.9}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){
+  .wrap{padding:0 14px} .two{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr} th,td{white-space:normal}
+  .skill .row{flex-direction:column;gap:2px} .skill .row .lab{flex:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Lucky Baby · 潜能与副业作战台 v2</h1>
+  <div class="sub">基于《半年成长与赚钱计划 1.0》母计划重跑 · 六模块决策文档 · 生成于 2026-09-28</div>
+  <div class="chips">
+    <span class="chip">主业：<b>自由职业 / 个体</b>（家庭教育 ¥1.5万/月）</span>
+    <span class="chip">时间预算：<b>5–10 小时/周</b>（硬约束）</span>
+    <span class="chip">6 个月目标：<b>月增 ¥8,000–20,000</b></span>
+    <span class="chip">变现偏好：<b>咨询服务 + 内容 + 带货</b></span>
+  </div>
+</header>
+
+<div class="alert">
+  <h4>⚠️ 负荷警报：你的三个目标正在抢同一段时间</h4>
+  母计划里<b>雅思已锁定 12–15h/周</b>，而"副业商业"在现有周日程表中实际只有约 <b>4–5h/周</b>（周一下午 2h + 周三 1h + 零散）。把"额外新增 5–10h 副业"加进去，周负荷会突破 25h —— 这是母计划上半年最容易崩的地方。<br>
+  <b>本作战台的处理方式：</b>① 主线计划按 <b>5h/周真实容量</b>编制；② 大部分"副业动作"从你<b>已经在做的事里拆出来重新定价</b>，而不是凭空新增；③ 每条路径标注可否扩容到 8–10h 版本。
+  <div class="ph">✏️ 若 12 月雅思考完后释放 12–15h/周，可立即启动"第二曲线"（模块② P7），此处记录你的考后切换日期</div>
+</div>
+
+<div class="summary">
+  <span class="tag">结论摘要 · 只读这一屏也够用</span>
+  <div class="lever">最强杠杆：<br>把「孩子学习系统梳理」做成 <b>AI 驱动的标准化诊断产品</b> —— 一次访谈，同时产出四份资产（家长报告 / 案例库条目 / 口播选题 / 下游客户线索）。</div>
+  <div class="grid">
+    <div class="metric"><div class="k">首选启动路径</div><div class="v">付费学习系统梳理 ¥199 → ¥999</div><div class="n">已有客户验证过定价锚点</div></div>
+    <div class="metric"><div class="k">第一笔钱预计</div><div class="v">第 3–4 周</div><div class="n">前提：4 周内接触 20 位目标家长</div></div>
+    <div class="metric"><div class="k">12 周目标</div><div class="v">月流水 ¥8,000+</div><div class="n">家庭副业口径，不含主业</div></div>
+    <div class="metric"><div class="k">最大风险</div><div class="v">第 1–4 周不敢开口触达</div><div class="n">方向不缺，缺的是 20 次对话</div></div>
+  </div>
+  <div class="tip" style="margin-top:16px">
+    <b>一句话执行版：</b>不要新发明副业。你现在身上那份 ¥1.5万/月的综合服务，是市场已经投票过的产品包 —— 把它<b>拆开、命名、单独定价</b>。第一个拆出来单独卖的，就是"学习系统梳理"。
+  </div>
+</div>
+
+<nav>
+  <a href="#m1" class="on" data-t="m1">① 隐蔽技能</a>
+  <a href="#m2" data-t="m2">② 十种增收路径</a>
+  <a href="#m3" data-t="m3">③ 专属产品线</a>
+  <a href="#m4" data-t="m4">④ 最大杠杆</a>
+  <a href="#m5" data-t="m5">⑤ 高薪机会</a>
+  <a href="#m6" data-t="m6">⑥ 12 周行动计划</a>
+</nav>
+
+<section id="m1" class="on">
+  <h2><span>①</span>隐蔽技能识别</h2>
+  <div class="lead">回答一个问题：你身上哪些能力，市场愿意付钱、而你觉得"这不算什么"。判据是<b>市场稀缺度高 × 本人习以为常</b>——不是你不好意思说的东西，是你天天做、已经不觉得是回事的东西。</div>
+
+  <div class="skill">
+    <div class="name">1 · 把一团乱麻的育儿问题，拆成可行动变量的能力</div>
+    <div class="row"><div class="lab">为什么被低估</div><div class="txt">你的自我描述是"我就是跟家长聊了聊"。你的潜意识定价锚点是"解决问题值钱，把问题看清楚不值钱"。事实恰恰相反——家长愿意付钱的，正是"有人帮我把这件事看清楚"。</div></div>
+    <div class="row"><div class="lab">为什么值钱</div><div class="txt">市场供给严重偏向"答案型专家"（讲方法、卖课、给方案），<b>诊断层几乎空白</b>。而诊断是所有后续付费的前置环节：没人会给自己的孩子买一个还没被确诊的"疗程"。行业缺的不是专家，是能把具体一个孩子看明白的人。</div></div>
+    <div class="row"><div class="lab">谁会付费</div><div class="txt">8–12 岁孩子的家庭，双职工或高净值、重视教育但陪伴不足、孩子无严重心理问题，困扰集中在学习习惯 / 英语 / 错题 / 时间管理 / 培训班选择 / 亲子沟通。付费动机：<b>焦虑需要一个具体的出口</b>。单次诊断客单价 ¥199–999（深圳市场估算，2026 口径）。</div></div>
+    <div class="row"><div class="lab">AI 如何放大</div><div class="txt">流水线：访谈录音 → AI 转写 → 按 A–H 八栏结构化 → AI 生成"事实 / 家长判断 / 孩子观点 / 假设 / 待补信息"五栏初稿 → 你只做<b>最后 20%：判定哪 1–3 个问题最该先动</b>。单份交付耗时从约 6h 压到约 1.5h，而<b>同一次访谈的输入还能同时产出另外三份东西</b>（见模块④）。</div></div>
+  </div>
+
+  <div class="skill">
+    <div class="name">2 · 让不愿开口的人说出真话的访谈设计能力</div>
+    <div class="row"><div class="lab">为什么被低估</div><div class="txt">七年销售让你觉得"会问问题"是基本功。但你的访谈对象不是客户，是<b>戒备的孩子</b>和<b>焦虑到反复自我辩护的家长</b>。让这两类人说真话，是两套不同的技术，而你已经同时握着。</div></div>
+    <div class="row"><div class="lab">为什么值钱</div><div class="txt">这是你所有产品的<b>数据入口</b>。别人做不出好的家庭教育产品，卡点往往不在方法论，而在拿不到真实信息。你已经有硬证据：家庭会议后家长原话"才发现孩子心理有这么重压力和负担，之前都没发现"。</div></div>
+    <div class="row"><div class="lab">谁会付费</div><div class="txt">① 直接付费：家长，家庭会议主持与亲子沟通专场（单次 ¥499–1500）；② 横向变现：教育培训机构需要"家长满意度深度访谈"和"流失预警访谈"，这类单项外包按次计费，比讲一天课更省心。</div></div>
+    <div class="row"><div class="lab">AI 如何放大</div><div class="txt">把你散落的提问沉淀成<b>可复用的提问库</b>（开启型 / 事实型 / 假设验证型 / 情绪确认型四类），AI 按访谈阶段实时提示下一问，并把儿童回答做情绪标记。你负责临场判断"这一句要不要追"，AI 负责不遗漏。</div></div>
+  </div>
+
+  <div class="skill">
+    <div class="name">3 · 没有品牌、没有流量、没有背书，也能谈到高价的自成交能力</div>
+    <div class="row"><div class="lab">为什么被低估</div><div class="txt">你把它归类为"我以前做销售的"。但真正的稀缺点不在技巧，在于你在<b>零品牌资产</b>的条件下，一个人跑完了从获客到报价 1.8 万、谈到 1.5 万成交的全过程。绝大多数专业人士（老师、咨询师、治疗师）恰恰死在这一步。</div></div>
+    <div class="row"><div class="lab">为什么值钱</div><div class="txt">懂家庭教育的人供给充足，<b>能自己拿到客户的极少</b>。这既是你的现金流保险丝，也是可外化的独立能力。另一个隐含价值：因为你自己能成交，你对"哪些包装是无用的"有准确嗅觉，这在后期做内容时不会被数据骗。</div></div>
+    <div class="row"><div class="lab">谁会付费</div><div class="txt">独立家庭教育从业者、新手心理咨询师、转型期自由职业者——专业强、获客弱的群体。形态：成交诊断单次 ¥800–2000，或 4 周成交陪跑 ¥2000–5000。</div></div>
+    <div class="row"><div class="lab">AI 如何放大</div><div class="txt">AI 承担异议处理库生成、跟进节奏提醒、客户画像打标、话术 A/B 版本产出；你只做两个判断：<b>什么时候报价</b>、<b>报多少</b>。后期可把整套逻辑转成低价数字产品，边际成本归零。</div></div>
+  </div>
+
+  <div class="skill">
+    <div class="name">4 · 把个人隐性经验固化成别人拿来就能用的工具的能力</div>
+    <div class="row"><div class="lab">为什么被低估</div><div class="txt">访谈表 1.0 在你眼里只是"给自己整理用的"。但从"脑子里的经验"到"一个有 A–H 八栏、有时间分配、有观察要点的可交付表格"，这已经完成了一次完整的产品化动作——绝大多数从业者一辈子停留在"我心里有数"。</div></div>
+    <div class="row"><div class="lab">为什么值钱</div><div class="txt">家庭教育行业最稀缺的不是专家观点，是<b>可复制的交付工具</b>。新入行的独立教育者、缺教研能力的小机构，愿意为"拿来就能开张"的工具包付费，因为它替他们省的是几十小时的试错。</div></div>
+    <div class="row"><div class="lab">谁会付费</div><div class="txt">新入行的家庭教育从业者、小型素质教育机构、以及想自己系统辅导孩子的高知家长。工具包 ¥199–599；若叠加 AI 自动出报告，可提到 ¥399–899。</div></div>
+    <div class="row"><div class="lab">AI 如何放大</div><div class="txt">工具从"表格"升级为"半软件"：家长填表 → AI 输出结构化诊断报告与四周行动清单。你一次性生产，之后每多卖一份的边际成本≈0 —— 这是 5–10h/周预算下唯一能突破时间天花板的形态。</div></div>
+  </div>
+
+  <div class="skill">
+    <div class="name">5 · 让人主动加入并带来下一个人的机制设计能力</div>
+    <div class="row"><div class="lab">为什么被低估</div><div class="txt">你在 Toastmasters 做的是"志愿者职务"，不认为这是商业能力。但市场拓展总监这个角色的实际工作内容是：设计激励阶梯、做转化漏斗、用内容和话术说服——这是一整套<b>增长与招募方法论</b>，而且是你在真实组织里验证过的。</div></div>
+    <div class="row"><div class="lab">为什么值钱</div><div class="txt">家庭教育业务<b>极度依赖转介绍</b>——家长只信另一个家长的推荐。绝大多数从业者靠天吃饭（"口碑好了自然会来"），没人系统做过激励设计。而你手上有现成的激励阶梯模板可以直接迁移。</div></div>
+    <div class="row"><div class="lab">谁会付费</div><div class="txt">① 自用，价值最大：把 WIN Pin / 行李牌 / 帽子的阶梯逻辑，迁移成"家长转介绍激励"（见模块② P4）；② 外化：为需要分销与合伙人机制的个人 IP、小机构设计招募体系，单项目 ¥3000–8000。</div></div>
+    <div class="row"><div class="lab">AI 如何放大</div><div class="txt">AI 生成阶梯方案的多套备选、对应话术版本、跟进时间节点表；你负责判断"这个人群到底为什么推荐"这一层——动机判断是 AI 做不到、而你已经在演讲会里反复练过的部分。</div></div>
+  </div>
+
+  <div class="redline">
+    <b>本区红线：</b>以上五项里，第 1 项和第 2 项是<b>别人抄不走的</b>（依赖你与真实家庭的面对面经验）；第 3、5 项是<b>高杠杆但必须依附产品才有意义</b>的能力——单独卖"我能成交"没有说服力，必须变成"我跑通过一套东西，把它卖给你"。
+  </div>
+  <div class="ph">🖼️ 此处理应放一张你的真实工作场景照（你与家长/孩子沟通的侧影），作为未来产品页主视觉。务必脱敏。</div>
+</section>
+
+<section id="m2">
+  <h2><span>②</span>十种增收路径对比</h2>
+  <div class="lead">按<b>四维打分</b>（时间契合 30 / 复利系数 30 / 稀缺度 20 / 冷启动速度 20）排序。≥75 推荐 ⭐，60–74 备选 ○，&lt;60 排除 ❌。收入潜力均为<b>估算口径</b>，区分首月 / 第 3 月 / 第 6 月。</div>
+
+  <table>
+    <thead><tr>
+      <th style="width:20%">路径</th><th style="width:11%">启动成本</th><th style="width:9%">周时间</th>
+      <th style="width:7%">难度</th><th style="width:20%">月收入潜力（估算）</th><th style="width:8%">适配度</th><th style="width:25%">第一笔钱从哪来</th>
+    </tr></thead>
+    <tbody>
+      <tr>
+        <td><b>① 孩子学习系统梳理</b>（付费诊断，单次 60–90min + 报告）</td>
+        <td>≈¥0（已有访谈表）</td><td>4–5h</td><td>低</td>
+        <td>首月 ¥200–600｜3月 ¥2–4k｜6月 ¥6–10k</td>
+        <td><span class="score">82</span> <span class="badge b-star">⭐推荐</span><div class="bar"><i style="width:82%;background:#b45309"></i></div></td>
+        <td>现有 1–2 个服务家庭转介绍，或你已列的那 10 位"认识 8–12 岁家长的人"</td>
+      </tr>
+      <tr>
+        <td><b>② 家庭会议工具包 + 付费主持</b>（脚本/话术包 + 上门或线上主持一场）</td>
+        <td>¥300–800（物料+录音）</td><td>3–4h</td><td>中</td>
+        <td>首月 ¥0–1.5k｜3月 ¥3–5k｜6月 ¥5–8k</td>
+        <td><span class="score">77</span> <span class="badge b-star">⭐推荐</span><div class="bar"><i style="width:77%;background:#b45309"></i></div></td>
+        <td>已完成梳理的老客户家长，尤其是访谈中被你发现"亲子沟通断层"的家庭</td>
+      </tr>
+      <tr>
+        <td><b>③ 4 周陪伴小班</b>（4–6 个家庭，周行动计划 + 群答疑）</td>
+        <td>¥500（课件与打卡表）</td><td>2–3h（首轮 8h 一次性）</td><td>中高</td>
+        <td>首月 —｜3月 ¥4–8k｜6月 ¥10–15k</td>
+        <td><span class="score">69</span> <span class="badge b-ok">○备选</span><div class="bar"><i style="width:69%;background:#0f766e"></i></div></td>
+        <td>必须先在①里积累 ≥8 个付费家长，才有池子开第一期</td>
+      </tr>
+      <tr>
+        <td><b>④ 家长转介绍激励机制</b>（阶梯返赠 + 老带新）</td>
+        <td>≈¥0</td><td>&lt;0.5h</td><td>低</td>
+        <td>本身不产生收入，作用在①②⑤上，估算<b>放大 20–40%</b></td>
+        <td><span class="score">85</span> <span class="badge b-star">⭐推荐</span><div class="bar"><i style="width:85%;background:#b45309"></i></div></td>
+        <td>—（乘数项，依附于付费客户存在，不能独立启动）</td>
+      </tr>
+      <tr>
+        <td><b>⑤ 家长自助工具包</b>（错题诊断表 + 习惯追踪表 + 家庭会议脚本，AI 出报告）</td>
+        <td>¥200–500（一次性设计）</td><td>0.5h/周维护</td><td>中</td>
+        <td>首月 ¥0–500｜3月 ¥1–2k｜6月 ¥2–4k</td>
+        <td><span class="score">80</span> <span class="badge b-star">⭐推荐</span><div class="bar"><i style="width:80%;background:#b45309"></i></div></td>
+        <td>口播内容下的"想要模板评论区扣 1"，或作为①的交付附件升级成付费版</td>
+      </tr>
+      <tr>
+        <td><b>⑥ 给同行卖「第一单怎么成交」训练营</b>（录播 + 社群，¥1999–4999/人）</td>
+        <td>¥500–1000（录播设备/剪辑）</td><td>1.5–3h</td><td>中</td>
+        <td>首月 ¥0｜3月 ¥0–5k｜6月 ¥8–20k</td>
+        <td><span class="score">84</span> <span class="badge b-star">⭐第二曲线</span><div class="bar"><i style="width:84%;background:#0f766e"></i></div></td>
+        <td>Toastmasters D118 人脉网里的自由职业者与转型期职场人（非家长群体）</td>
+      </tr>
+      <tr>
+        <td><b>⑦ 案例集 / 付费专栏</b>《30 个真实家庭教育案例》¥99</td>
+        <td>≈¥0（案例本就在积累）</td><td>0.5h/周</td><td>低</td>
+        <td>首月 —｜3月 ¥500–1.5k｜6月 ¥2–4k</td>
+        <td><span class="score">80</span> <span class="badge b-star">⭐推荐</span><div class="bar"><i style="width:80%;background:#b45309"></i></div></td>
+        <td>作为①的低门槛引流层，卖给"想先看看你靠不靠谱"的观望家长</td>
+      </tr>
+      <tr>
+        <td><b>⑧ 机构 / 社区家长讲座</b>（半天场 ¥2000–5000）</td>
+        <td>¥1000（讲稿+物料，一次性）</td><td>2–3h/场</td><td>中高</td>
+        <td>首月 —｜3月 ¥2–5k｜6月 ¥4–8k</td>
+        <td><span class="score">63</span> <span class="badge b-ok">○备选</span><div class="bar"><i style="width:63%;background:#0f766e"></i></div></td>
+        <td>主动 BD：社区、培训机构、图书馆、企业 HR（可借 D118 人脉进企业 EAP）</td>
+      </tr>
+      <tr>
+        <td><b>⑨ 教育类精选带货 / 团购</b>（书单、错题本系统、学习工具、英语读物）</td>
+        <td>¥0–2000（视是否囤货）<br><b>强烈建议零囤货</b></td><td>3–4h</td><td>中</td>
+        <td>首月 ¥0–300｜3月 ¥1–2k｜6月 ¥2–4k</td>
+        <td><span class="score">56</span> <span class="badge b-no">❌暂缓</span><div class="bar"><i style="width:56%;background:#9ca3af"></i></div></td>
+        <td>依附现有口播流量，<b>必须在内容稳定更新 8 周后才起步</b></td>
+      </tr>
+      <tr>
+        <td><b>⑩ 全案长期陪跑</b>（月费 ¥3000–8000 / 家庭，随叫随到）</td>
+        <td>≈¥0</td><td>&gt;15h</td><td>—</td>
+        <td>单家庭收入高，但<b>无法规模化</b></td>
+        <td><span class="score">41</span> <span class="badge b-no">❌排除</span><div class="bar"><i style="width:41%;background:#9ca3af"></i></div></td>
+        <td>—（这就是你现在 ¥1.5万/月的主业形态，是问题本身不是答案）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="redline">
+    <b>明确排除项（共 4 条，必须说明理由）：</b>
+    <ul>
+      <li><b>⑩ 全案长期陪跑 ❌41</b> — 这是你现在已经在做的事。把它"扩量"等于把周工时从 20h 拉到 40h，然后彻底没有时间做产品。<b>正确做法：不扩量，只精选</b>——保留 1–2 个高付费全案客户作为现金流，其余全部引导到①的标准品。</li>
+      <li><b>⑨ 泛品类带货 ❌56</b> — 与你的核心资产（"真实、专业、不装专家"的个人定位）<b>直接冲突</b>。一次零食/美妆带货换来的短期佣金，会稀释家长对你的信任，而信任是这条路上唯一的货币。<b>入场条件：口播稳定更新满 8 周 + 家长咨询量≥每月 10 条，再重启评估</b>，且只做与"孩子学习"强相关的选品。</li>
+      <li><b>雅思 / 英语提分陪跑 ❌</b> — 你当前雅思摸底 4.0–5.5，权威性不足以支撑付费；且它占用你 12–15h/ 周的学习预算。<b>但请保留一个变体</b>："和孩子一起学英语的同路人"是极强的信任素材，可用在内容里，不要单独收费。</li>
+      <li><b>养生账号 / 健康咨询 ❌</b> — 母计划已明确列入"以后可能做"清单，本轮不再占用决策带宽。多一个赛道 = 少一半命中率。</li>
+    </ul>
+  </div>
+
+  <div class="tip">
+    <b>关于你勾选的"带货"：</b>我没有直接把它排除，而是拆成了两种情况。泛品类带货必须排除——它会吃掉你最贵的东西。教育类精选（书单、错题本、英语读物）可以保留，但它的正确位置是<b>内容资产的自然延伸</b>（"家长总问我买什么错题本，这是我用的三款"），而不是另开一条直播生意。它值 ¥1–3k/月，值不到为此重建一条渠道。
+    <div class="ph">✏️ 若你仍希望单独做带货，请在此记录你的选品清单与目标平台，我们会重算它与其他路径的时间分配</div>
+  </div>
+</section>
+
+<section id="m3">
+  <h2><span>③</span>专属产品线设计</h2>
+  <div class="lead">站在企业战略家视角：不是"一堆可以卖的东西"，而是<b>一条客户能一路往上走的阶梯</b>。每一层都要回答——它在产品线里是负责赚钱，还是负责获客，还是负责筛选？</div>
+
+  <div class="layer l1">
+    <span class="lv">第 1 层 · 引流</span><span class="price">免费 ~ ¥99</span>
+    <h4>《孩子学习习惯自检清单》+ 10 条真实观察口播 + 错题本自查 3 问</h4>
+    <p>形态：一份可下载的 PDF 清单（15 题，答完自动分出"习惯 / 英语 / 错题 / 时间 / 压力"五个倾向）+ 每周 3 条口播 + 一个 9.9 元的错题自查小测试。</p>
+    <p><b>产品线角色：纯获客，KPI 只有一个——加到微信的人数。</b>这一层不要求赚钱，盈亏不重要；它唯一要证明的是"有人愿意为你的判断停下来"。</p>
+    <p><b>升阶指引：</b>领取清单即进入私域 → 7 天内自动推送 3 条"同龄家庭真实观察"→ 第 3 条附上限时免费"20 分钟电话初谈"→ 转化为第 2 层。</p>
+    <div class="ph">✏️ 填写你的引流诱饵最终形态（PDF / 视频 / 测试）与承接方式（企业微信 / 微信群 / 私信）</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="layer l2">
+    <span class="lv">第 2 层 · 中端</span><span class="price">¥199 – ¥999</span>
+    <h4>《孩子学习系统梳理》AI 标准化诊断 + 自助工具包</h4>
+    <p><b>标准版 ¥199–399（60–90min）</b>：访谈 + 五栏结构化笔记 + 判定当下最重要的 1–3 个问题 + 未来 1–4 周行动建议（AI 承担 80% 报告撰写，你只做判断）。</p>
+    <p><b>深度版 ¥499–999（120min + 资料收集）</b>：增加作业时间取样数据、错题样本分析、英语能力拆解、培训班复盘、14 天后一次效果回访。</p>
+    <p><b>工具包 ¥199–399（纯资产）</b>：错题诊断表 + 习惯追踪表 + 家庭会议完整脚本，一次生产、无限次售卖。</p>
+    <p><b>产品线角色：主利润 + 主筛选器。</b>这层是本作战台押注的核心，它的边际成本在 AI 介入后趋近于零，亏损风险最低，且是进入第 3 层的唯一通道。</p>
+    <p><b>升阶指引：</b>标准版客户在回访时问一句"要不要我盯着你做四周"→ 深度版 / 4 周陪伴小班。</p>
+    <div class="ph">✏️ 填写第一版定价（建议标准版 ¥199，前 3 个免费或 ¥99 换反馈）</div>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="layer l3">
+    <span class="lv">第 3 层 · 高客单</span><span class="price">¥1,500 – ¥4,000</span>
+    <h4>4 周家庭陪伴小班（4–6 个家庭）+ 家庭会议主持（单场）</h4>
+    <p><b>小班 ¥1,500–3,000 / 家庭 / 4 周；</b><b>家庭会议主持 ¥499–1,500 / 场。</b></p>
+    <p><b>必须写死交付边界（防止无限扩大）：</b>每周 1 次 60 分钟线上群答疑 + 每周 1 份个性化周行动计划 + 结营 1 次 45 分钟复盘。<b>明确不做：不限次微信答疑、随时改计划、代写作业分析。</b>边界写进招生文案，这是保护你自己时间预算的唯一方法。</p>
+    <p><b>产品线角色：主要利润来源。</b>客户少但集中，用固定时间窗口交付，符合 5h/周预算。</p>
+    <p><b>升阶指引：</b>结营时给出"未来 3 个月建议持续观察清单"→ 年费家庭顾问。</p>
+  </div>
+  <div class="arrow">↓</div>
+
+  <div class="layer l4">
+    <span class="lv">第 4 层 · 旗舰</span><span class="price">¥8,000 – ¥20,000 / 年</span>
+    <h4>年度家庭学习顾问（限额 3–5 个家庭）+ 核心转介绍合伙人圈</h4>
+    <p>形态：每月 1 次系统梳理 + 每季度 1 次线下复盘 + 全年优先排期 + 关键节点（升学、分班、竞赛）决策陪跑。</p>
+    <p><b>入选门槛（不是谁给钱都收）：</b>① 已完成至少 1 次付费梳理或 1 期小班；② 孩子无需要专业干预的心理 / 精神健康问题；③ 家长愿意每周记录 3 条真实观察；④ 家庭能通过一句话推荐带来至少一个同类型家庭（这是合伙人圈的前提）。<b>达不到就推荐给合适的专业机构，这是你的专业边界，也是品牌资产。</b></p>
+    <p><b>产品线角色：稳定底盘 + 转介绍引擎。</b>3–5 个限额家庭就能锁定年 ¥3–10 万，且他们是你获客成本最低的渠道。</p>
+  </div>
+
+  <div class="redline">
+    <b>本区红线：</b>① <b>引流层不许赚钱</b>，它的 KPI 是加微数不是 GMV；② <b>中端层必须边际成本≈0</b>，否则 5h/周撑不住；③ <b>顺序不能反</b>——不要先做便宜的工具包指望它引流。缺信任存量时低价产品必然卖不动，正确顺序是：<b>高价服务拿案例 → 案例反哺低价产品</b>。
+    <div class="ph">🖼️ 此处放产品线全貌图（四层阶梯 + 价格 + 升阶箭头），建议做成一张竖图用于朋友圈/小红书置顶</div>
+  </div>
+</section>
+
+<section id="m4">
+  <h2><span>④</span>最大杠杆判定</h2>
+  <div class="lead">收敛到<b>唯一一个</b>答案。判据是一句话：<b>哪一项做成了，会让其他所有项都变得容易？</b>候选必须同时满足：建立在存量资产上 / AI 可承担 ≥60% 生产 / 交付一次可多次变现 / 现在就能动手。</div>
+
+  <div class="summary" style="border-color:var(--accent2)">
+    <span class="tag" style="background:var(--accent2)">最强杠杆 · 单一结论</span>
+    <div class="lever">把「孩子学习系统梳理」做成 AI 驱动的标准化诊断产品 —— 让<b>一次 75 分钟的访谈，同时产出四份资产</b>。</div>
+    <div class="grid">
+      <div class="metric"><div class="k">资产 1</div><div class="v">给家长的诊断报告</div><div class="n">直接产生现金流 ¥199–999</div></div>
+      <div class="metric"><div class="k">资产 2</div><div class="v">案例库条目</div><div class="n">半年积累 30–50 个，是所有产品的护城河</div></div>
+      <div class="metric"><div class="k">资产 3</div><div class="v">口播选题</div><div class="n">真实问题自动变成内容，不用想选题</div></div>
+      <div class="metric"><div class="k">资产 4</div><div class="v">下游客户线索</div><div class="n">自然导出工具包 / 小班 / 年费</div></div>
+    </div>
+  </div>
+
+  <h3>为什么是它（四条理由，都要具体到可执行）</h3>
+  <ul>
+    <li><b>它已经付费验证过，不用再猜。</b>你现在的 ¥1.5万/月，本质就是这个诊断的<b>未拆分全包形态</b>。而且报价 1.8 万谈到 1.5 万成交，说明市场对它的定价锚点远高于 ¥199 —— 拆出来单独卖是<b>降维促销</b>，成交难度比现在低一个量级。</li>
+    <li><b>AI 能承担约 80% 的生产。</b>录音 → 转写 → 八栏结构化 → 五栏假设 → 报告初稿，全流程可自动化；你只保留最后 20%：<b>判定哪 1–3 个问题最该先动</b>。而这 20% 恰恰是你七年销售 + 一年真实服务积累出的判断力，别人替代不了。</li>
+    <li><b>它是整条产品线的漏斗顶端。</b>不做它，工具包卖给谁？小班招谁？年费顾问从哪来？做一次诊断，客户名单、案例素材、内容选题、升阶线索全部一次到位。<b>其他所有路径都是它的下游。</b></li>
+    <li><b>每做一次，第 20 次的质量远高于第 1 次。</b>这是少数"边赚钱边变强"的动作——案例库复利会同时抬高你的诊断准确率、内容说服力和后续产品的可信度。</li>
+  </ul>
+
+  <h3>为什么不选评分更高的两个</h3>
+  <div class="two">
+    <div class="skill" style="margin:0">
+      <div class="name" style="color:var(--mute)">候选 B · 家长转介绍激励机制（85 分，全场最高）</div>
+      <p style="margin-top:8px"><b>它是乘数，不是源头。</b>转介绍机制必须挂在<b>已经存在的付费客户</b>上才有意义——现在你手上还没有一个单独付费的诊断客户，机制设计得再漂亮也无处附着。<br><b>正确顺序：</b>先做①拿到 8–10 个付费客户，<b>第 5 周</b>再上线转介绍机制，那时它的放大倍数才有地方使。<br><span style="color:var(--danger)">这也是本轮最容易犯的错：把最高分的选项当成最优解。</span></p>
+    </div>
+    <div class="skill" style="margin:0">
+      <div class="name" style="color:var(--mute)">候选 C · 同行成交训练营（84 分）</div>
+      <p style="margin-top:8px"><b>它要重建一个完全不同的客户群，而且现在卖缺说服力。</b>它的目标客户是自由职业者与转型期职场人，与你的家长池<b>零重叠</b>——等于从零开始冷启动，违反"建立在存量资产上"这条。<br>更关键的是：<b>等你自己用这套诊断跑出 ¥8k–2万/月，同样的内容卖给同行，可信度和客单价都会翻倍。</b>顺序反了会两头落空。<br><b>定位：第 4–6 个月的第二曲线，不是现在。</b></p>
+    </div>
+  </div>
+
+  <h3>90 天最小验证动作</h3>
+  <p>4 周内：<b>接触 20 位目标家长 → 完成 5 次梳理（前 3 次免费）→ 其中 ≥3 人愿意付 ≥¥199 → ≥1 人升阶到 ≥¥999。</b></p>
+
+  <div class="tip">
+    <b>止损线（提前约定，到时候不许改）：</b><br>
+    ① 接触满 20 人、付费转化 ≤2 人 → <b>不是产品不行，是人群或话术不对</b>。换验证对象（例如从 8–12 岁切换到初一"小升初后成绩断崖"家庭），<b>绝不重做产品</b>；<br>
+    ② 第 8 周累计收入 &lt;¥1,000，或咨询转化率 &lt;5% → <b>换渠道</b>（从自媒体转向社区 / 机构合作 / 私信直撩），而不是降价；<br>
+    ③ 某周实际投入 &gt;10h 且收入未同步上升 → 说明澄清动作失控，<b>立即把交付环节再砍一层交给 AI</b>。
+  </div>
+</section>
+
+<section id="m5">
+  <h2><span>⑤</span>高薪职位与更高薪的外部形态</h2>
+  <div class="lead">你是自由职业者，所以这里<b>不看"回去打工的岗位"</b>，而看等价甚至更高杠杆的<b>外部形态</b>：外部顾问、项目合伙人、按项目计费。薪资均为<b>深圳市场估算（2026 口径）</b>，非精确报价，需你自行二次核实。</div>
+
+  <table class="tight">
+    <thead><tr><th style="width:24%">角色 / 形态</th><th style="width:15%">估算区间</th><th style="width:32%">为什么你能胜任（三条硬证据）</th><th style="width:29%">缺口与切入点</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>1 · 国际学校 / 双语学校 家校沟通负责人 · 家庭教育顾问</b></td>
+        <td>¥15k–25k/月<br><span style="color:var(--mute);font-size:12px">全职口径估算</span></td>
+        <td>① 七年企业销售 + 团队第一，家校沟通本质是家长关系管理；② 已独立设计并主持家庭会议，有家长口碑原话为证；③ 正在备考雅思这个动作本身，在双语学校场景里是加分项而非减分项。</td>
+        <td><b>缺口：</b>学校体系经验、心理/教育学历背书。<br><b>切入：</b>不要直接投简历。先用模块② P8（家长讲座）<b>项目制合作</b>进校做 1–2 场工作坊，把"合作方"变成"候选人"，学校更愿意录用已验证过的人。</td>
+      </tr>
+      <tr>
+        <td><b>2 · 教育机构「家长服务 / 续费率」负责人</b></td>
+        <td>¥12k–25k/月 + 提成<br><span style="color:var(--mute);font-size:12px">含绩效，波动大</span></td>
+        <td>① 单月最高销量约 100 万、最大客户约 70 万——这是机构最看重的数字；② 约 70% 续费率，直接对应机构核心 KPI；③ 你自己就能成交高单价服务，懂一线家长的决策心理。</td>
+        <td><b>缺口：</b>带团队经历；教育行业机构侧的方法论词汇。<br><b>切入：</b>以<b>外部续费体系顾问</b>形式按项目收费（一家机构 ¥1–3万），既能拿到比打工更高的时薪，又能补齐"教育行业顾问"这条简历线。</td>
+      </tr>
+      <tr>
+        <td><b>3 · 高端家庭教育机构的「家庭顾问」/ 项目合伙人</b></td>
+        <td>¥20k–40k/月<br><span style="color:var(--mute);font-size:12px">分成年金制估算</span></td>
+        <td>① 你现在的 ¥1.5万/月全案服务就是这份工作在独立完成；② 服务内容横跨学科、英语、体能、习惯、心理、培训规划，正是高端客户要的"一站式"；③ 学过三年演讲 + Toastmasters 管理经验，面对高净值客户不怯场。</td>
+        <td><b>缺口：</b>组织化交付能力、团队。<br><b>切入：</b>先把自己的服务<b>产品化</b>（模块③），带着"一套可交付的标准品"去谈合伙，议价能力远高于带着劳动力去谈。<span style="color:var(--accent)">这条与你当前主线最贴合，优先。</span></td>
+      </tr>
+      <tr>
+        <td><b>4 · AI 教育产品的「家庭教育场景」内容 / 体验顾问（可远程）</b></td>
+        <td>¥8k–20k/月<br><span style="color:var(--mute);font-size:12px">兼职顾问口径</span></td>
+        <td>① 懂家长真实痛点（每天泡在真实家庭里，不是二手调研）；② 自己已经在用 AI 落地（知识库整理、小应用）——能讲出真实使用场景；③ 有内容生产能力，可兼任产品的内容输出。</td>
+        <td><b>缺口：</b>产品方法论术语、行业人脉。<br><b>切入：</b>通过 AI 教育公司创始人的内容社群先贡献免费洞察（比如在公开内容里持续输出"家长真正买单的三件事"），<b>让人找你</b>，比投简历有效。</td>
+      </tr>
+      <tr>
+        <td><b>5 · 企业 EAP / 家庭教育福利讲师（按场计费）</b></td>
+        <td>¥3k–8k/场<br><span style="color:var(--mute);font-size:12px">单场估算</span></td>
+        <td>① 演说三年 + 演讲会小区/中区管理经验，控场是练过的；② 内容来自真实案例，不是 PPT 二手观点；③ 企业员工多为双职工父母，与你目标人群高度重合。</td>
+        <td><b>缺口：</b>企业采购渠道、B 端报价经验。<br><b>切入：</b><b>这是你最容易破局的一条</b>——Toastmasters D118 的人脉网里有大量职场人和 HR，先用一场免费讲座换一个企业案例，再按 ¥3k 起报价。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="tip">
+    <b>把这五条当"弹药"而非"退路"。</b>它们的真正价值不是让你去打工，而是<b>抬高你对自己工作定价的底气</b>：当你知道市场为同样的能力开 ¥15k–40k/月，你对自己的产品和时间的定价就不会再犹豫。而且第 1、2、5 条都可以<b>先用母计划的 12 周同步推进</b>——它们本质上是同一个讲座/顾问能力的三种客户。
+  </div>
+  <div class="redline">
+    <b>本区红线：</b>薪资数字全部为<b>估算口径</b>，务必通过真实招聘信息、同行私下交流二次核实后再用于决策。第 1、3 条标注为<b>「12 个月期目标」</b>，不建议在雅思备考期内启动转型——母计划里"一个核心事业"的纪律不能破。
+  </div>
+</section>
+
+<section id="m6">
+  <h2><span>⑥</span>12 周行动计划</h2>
+  <div class="lead">硬约束先行：<b>本计划按每周 5 小时编制</b>（与你现有周日程的实际空档一致）。雅思的 12–15h/周不在此列。每个阶段都有<b>可观测的止损判定</b>。</div>
+
+  <div class="phase">
+    <h4>第 1–4 周 · 验证期</h4>
+    <div class="goal">目标：确认杠杆点成立（验证 ≠ 赚钱）。阶段产出必须是一个<b>能给别人看的东西</b>。</div>
+    <div class="step"><div class="no">1</div><div class="tx">把访谈表 1.0 升级为 <b>2.0（增加结构化字段）+ AI 报告模板</b>，跑通"录音→报告"全流程<span class="hrs">第 1 周一次性 4h，之后 0</span></div></div>
+    <div class="step"><div class="no">2</div><div class="tx">每周<b>联系 5 位潜在家长</b>（现有服务家庭转介绍优先，其次是你列的那 10 位中间人）<span class="hrs">2h/周</span></div></div>
+    <div class="step"><div class="no">3</div><div class="tx">每周完成 <b>1–2 次系统梳理</b>（前 3 次免费，第 4 次起 ¥99–199）+ 录 3 条口播<span class="hrs">3h/周，第 1 周替换为模板搭建</span></div></div>
+    <p style="margin-top:10px;font-size:13.5px"><b>周核算：</b>2 + 3 = <b>5h/周</b>（第 1 周约 6h）✔ 在预算内</p>
+    <p style="margin-top:8px;font-size:13.5px"><b>阶段产出：</b>5 份脱敏案例（进入案例库）+ 10 条口播 + <b>第一笔独立收入</b> + 一份可展示的诊断报告样品</p>
+    <p style="margin-top:8px;font-size:13.5px;color:var(--danger)"><b>止损判定：</b>接触满 20 人，付费转化 ≤2 人 → <b>换验证人群</b>（如切到初一家庭），<b>不换产品、不降价</b>。</p>
+  </div>
+
+  <div class="phase">
+    <h4>第 5–8 周 · 冷启动期</h4>
+    <div class="goal">目标：拿到第一笔钱（金额不重要，闭环重要）。同步上线工具包与转介绍机制。</div>
+    <div class="step"><div class="no">1</div><div class="tx">定价升到 <b>¥499 标准版</b>（AI 报告 + 14 天回访），每周稳定接 2 个客户<span class="hrs">3h/周</span></div></div>
+    <div class="step"><div class="no">2</div><div class="tx">生产<b>工具包三件套</b>：错题诊断表 + 习惯追踪表 + 家庭会议脚本（AI 出报告版）<span class="hrs">一次性 8h，摊 4 周 = 2h/周</span></div></div>
+    <div class="step"><div class="no">3</div><div class="tx">每周 2 条口播（承接"给焦虑家长的真实观察"系列）<span class="hrs">1h/周，批量录制</span></div></div>
+    <p style="margin-top:10px;font-size:13.5px"><b>第 6 周上线：</b>转介绍激励（老客户带 1 人 = 赠 1 次阶段复盘；带 3 人 = 赠 1 场家庭会议）—— <b>方法直接迁移自你在 Toastmasters 设计的激励阶梯</b>。</p>
+    <p style="margin-top:8px;font-size:13.5px"><b>周核算：</b>3 + 2 + 1 = <b>6h/周</b>（扩容版 ✔）</p>
+    <p style="margin-top:8px;font-size:13.5px"><b>阶段产出：</b>月流水 ¥2,000–3,000 + 工具包上架 + 至少 1 个转介绍成交</p>
+    <p style="margin-top:8px;font-size:13.5px;color:var(--danger)"><b>止损判定：</b>第 8 周累计收入 &lt;¥1,000 或咨询转化率 &lt;5% → <b>换渠道</b>（自媒体 → 社区/机构/私信直撩），不降价。</p>
+  </div>
+
+  <div class="phase">
+    <h4>第 9–12 周 · 放大期</h4>
+    <div class="goal">目标：提价 OR 规模化，二选一 —— 在 5h/周约束下<b>只能选提价</b>。</div>
+    <div class="step"><div class="no">1</div><div class="tx">上线 <b>¥999 深度版</b> + 第一期 <b>4 周陪伴小班</b>（4–6 个家庭，¥1,500–3,000/人）<span class="hrs">3h/周固定窗口</span></div></div>
+    <div class="step"><div class="no">2</div><div class="tx">打磨一份<b>公开课讲稿</b>《怎么把孩子的学习问题看清楚》，为第 4–6 月进社区/机构/企业做准备<span class="hrs">2h/周</span></div></div>
+    <div class="step"><div class="no">3</div><div class="tx">案例库推进到 <b>20+ 条</b>，每周固定 1 次 20 分钟周复盘<span class="hrs">0.5h/周</span></div></div>
+    <p style="margin-top:10px;font-size:13.5px"><b>周核算：</b>3 + 2 + 0.5 = <b>5.5h/周</b> ✔</p>
+    <p style="margin-top:8px;font-size:13.5px"><b>阶段产出：</b>月流水 ¥8,000+ ｜ 12 周累计验证达成母计划第 5 阶段</p>
+  </div>
+
+  <div class="phase">
+    <h4>第 4–6 个月 · 延展（系统化为期）</h4>
+    <div class="goal">目标：把跑通的事变成可持续系统，并解锁第二曲线。</div>
+    <ul>
+      <li><b>2027.01</b> 社区 / 机构讲座 1–2 场/月（¥2–5k/场），把 D118 人脉转成企业 EAP 通道</li>
+      <li><b>2027.02</b> 上线《30 个真实家庭教育案例》¥99 案例集，承接观望家长</li>
+      <li><b>2027.03</b> 复盘是否启动第二曲线 —— <b>同行「第一单怎么成交」训练营</b>（模块② P6）。<b>启动前提</b>：你的诊断流水稳定 ≥¥8k/月，此时"我是怎么跑通的"才有说服力</li>
+      <li><b>若 12 月雅思释放 12–15h/周</b>：优先投入①小班扩班与②训练营，<b>不要</b>再开第四条赛道</li>
+    </ul>
+    <div class="ph">✏️ 记录你的雅思考试月，以及考后第一时间要启动的那件事（建议写一句话，避免到时再决策）</div>
+  </div>
+
+  <div class="redline">
+    <b>最后一句提醒：</b>这套计划最大的失败点不在方向，也不在设计，<b>在第 1–4 周你敢不敢真的去触达那 20 个人</b>。方案和细节已经足够；唯一不确定的是执行。遇到拒绝是常态数据，不是失败信号 —— <b>你的止损线是"接触 20 人付费 ≤2 人"，不是"被拒绝 3 次"。</b>
+  </div>
+  <div class="tip">
+    <b>每周 20 分钟复盘（照抄母计划第 25 条，这里只补副业三项）：</b>① 本周接触了几位潜在家长？② 完成几次梳理 / 收入多少？③ 周实际投入有没有超过 6 小时 —— 超了就是伪计划，下周必须删动作。
+  </div>
+</section>
+
+<footer>
+  生成日期：2026-09-28 ｜ 数据口径：模块⑤薪资与全部客单价、收入潜力均为<b>深圳市场估算（2026 口径）</b>，非精确报价，决策前请二次核实<br>
+  素材来源：《Lucky Baby｜2026.10—2027.03 半年成长与赚钱计划 1.0》 ｜ 分析框架：潜能与副业侦察兵 v2（四维打分 + 杠杆矩阵）<br>
+  🖼️ = 待配图片位 ｜ ✏️ = 待你填写的内容
+</footer>
+
+</div>
+<script>
+(function(){
+  var links = document.querySelectorAll('nav a');
+  var secs = document.querySelectorAll('section');
+  function show(id){
+    secs.forEach(function(s){ s.classList.toggle('on', s.id === id); });
+    links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('data-t') === id); });
+  }
+  links.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = a.getAttribute('data-t');
+      history.replaceState(null,'','#'+id);
+      show(id);
+    });
+  });
+  function fromHash(){
+    var h = location.hash.replace('#','');
+    var ok = Array.prototype.some.call(secs, function(s){ return s.id === h; });
+    show(ok ? h : 'm1');
+  }
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
+</script>
+</body>
+</html>
+
